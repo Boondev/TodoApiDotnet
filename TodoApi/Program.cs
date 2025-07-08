@@ -4,17 +4,21 @@ using TodoApi.MappingProfiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var Services=builder.Services;
+var Services = builder.Services;
+
 // Add services to the container.
 
 Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 Services.AddEndpointsApiExplorer();
 Services.AddSwaggerGen();
 Services.AddAutoMapper(typeof(UserMappings));
 
 var conntextionString = builder.Configuration.GetConnectionString("DefaultConnection");
-Services.AddEntityFrameworkNpgsql().AddDbContext<TodoDbContext>(options=>options.UseNpgsql(conntextionString));
+Services
+    .AddEntityFrameworkNpgsql()
+    .AddDbContext<TodoDbContext>(options => options.UseNpgsql(conntextionString));
 
 var app = builder.Build();
 

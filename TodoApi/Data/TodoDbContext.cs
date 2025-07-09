@@ -11,6 +11,8 @@ namespace TodoApi.Data
         public DbSet<Todo> Todoes { get; set; }
         public DbSet<User> Users { get; set; }
 
+        public DbSet<Session> Sessions { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())

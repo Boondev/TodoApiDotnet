@@ -26,9 +26,5 @@ namespace TodoApi.Models
         [Column("name")]
         [MaxLength(255)]
         public string Name { get; set; }
-
-        [JsonIgnore]
-        [Column("salt")]
-        public byte[] Salt { get; set; }
     }
 }

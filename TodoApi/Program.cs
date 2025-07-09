@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Data;
 using TodoApi.MappingProfiles;
+using TodoApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,8 @@ Services.AddControllers();
 Services.AddEndpointsApiExplorer();
 Services.AddSwaggerGen();
 Services.AddAutoMapper(typeof(UserMappings));
+
+Services.AddTransient<IAuthService, AuthService>();
 
 var conntextionString = builder.Configuration.GetConnectionString("DefaultConnection");
 Services

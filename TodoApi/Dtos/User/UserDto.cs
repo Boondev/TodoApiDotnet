@@ -12,9 +12,9 @@ public class UserDto
     [EmailAddress]
     [Column("email")]
     [MaxLength(255)]
-    public string Email { get; set; }
+    public required string Email { get; set; }
 
     [Column("name")]
     [MaxLength(255)]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 }

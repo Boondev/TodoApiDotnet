@@ -15,10 +15,6 @@ namespace TodoApi.Controllers
     public class AuthController(TodoDbContext _context, IMapper _mapper, IAuthService authService)
         : Controller
     {
-        const int keySize = 64;
-        const int iterations = 600000;
-        HashAlgorithmName hashAlgorithm = HashAlgorithmName.SHA512;
-
         [HttpPost("register")]
         public ActionResult<UserDto> Register([FromBody] RegisterDto Dto)
         {
@@ -36,6 +32,19 @@ namespace TodoApi.Controllers
             UserDto userDto = authService.Register(Dto);
 
             return Ok(userDto);
+        }
+
+        [HttpPost("login")]
+        public ActionResult<UserDto> Login([FromBody] LoginDto Dto)
+        {
+            if (Dto == null)
+            {
+                return UnprocessableEntity("Please fill in the information requried");
+            }
+
+            string token = authService.Login(Dto);
+
+            return Ok(token);
         }
     }
 }

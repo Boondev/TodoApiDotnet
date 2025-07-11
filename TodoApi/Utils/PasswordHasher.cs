@@ -27,6 +27,11 @@ public sealed class PasswordHasher : IPasswordHasher<User>
         return Convert.ToBase64String(result);
     }
 
+    public PasswordVerificationResult VerifyHashedPassword(User user, string providedPassword)
+    {
+        return VerifyHashedPassword(user, user.Password, providedPassword);
+    }
+
     public PasswordVerificationResult VerifyHashedPassword(
         User user,
         string hashedPassword,

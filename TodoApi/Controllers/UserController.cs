@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +21,7 @@ namespace TodoApi.Controllers
         // {
         //     return View();
         // }
-
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDto>> GetUser(int id)
         {

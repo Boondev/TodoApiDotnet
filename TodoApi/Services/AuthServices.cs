@@ -71,7 +71,7 @@ public class AuthService(TodoDbContext _context, IMapper _mapper, IConfiguration
         var token = new JwtSecurityToken(
             issuer: _configuration["JWT:ValidIssuer"],
             audience: _configuration["JWT:ValidAudience"],
-            expires: DateTime.Now.AddHours(3),
+            expires: DateTime.Now.AddDays(7),
             claims: claims,
             signingCredentials: new SigningCredentials(
                 authSigningKey,

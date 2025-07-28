@@ -22,7 +22,9 @@ namespace TodoApi.Controllers
             {
                 return UnprocessableEntity("Please fill in the information requried");
             }
-            var ExistingUser = _context.Users.FirstOrDefault(x => x.Email == Dto.Email);
+            var ExistingUser = _context.Users.FirstOrDefault(x =>
+                x.Email.ToLower() == Dto.Email.ToLower()
+            );
 
             if (ExistingUser != null)
             {
@@ -48,4 +50,3 @@ namespace TodoApi.Controllers
         }
     }
 }
- 

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using TodoApi.Data;
 using TodoApi.MappingProfiles;
+using TodoApi.Models;
 using TodoApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,6 +45,7 @@ Services
             ),
         };
     });
+Services.Configure<Config>(builder.Configuration.GetSection("Config"));
 Services.AddTransient<IAuthService, AuthService>();
 
 var conntextionString = builder.Configuration.GetConnectionString("DefaultConnection");

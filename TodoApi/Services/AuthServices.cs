@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using TodoApi.Data;
 using TodoApi.Dtos;
@@ -22,9 +23,11 @@ public interface IAuthService
     string Login(LoginDto dto);
 }
 
-public class AuthService(TodoDbContext _context, IMapper _mapper, IConfiguration _configuration)
+public class AuthService(TodoDbContext _context, IMapper _mapper, IOptions<Config> config)
     : IAuthService
 {
+    private Config _config = config.Value;
+
     public UserDto Register(RegisterDto dto)
     {
         User user = _mapper.Map<User>(dto);
@@ -55,7 +58,9 @@ public class AuthService(TodoDbContext _context, IMapper _mapper, IConfiguration
 
         List<Claim> authClaims = new List<Claim>
         {
+            new(ClaimTypes.Email, user.Email),
             new(ClaimTypes.Name, user.Name),
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
         var token = generateJWTToken(authClaims);
@@ -65,12 +70,12 @@ public class AuthService(TodoDbContext _context, IMapper _mapper, IConfiguration
     private JwtSecurityToken generateJWTToken(List<Claim> claims)
     {
         var authSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(_configuration["JWT:Secret"])
+            Encoding.UTF8.GetBytes(_config.JwtConfig.Secret)
         );
 
         var token = new JwtSecurityToken(
-            issuer: _configuration["JWT:ValidIssuer"],
-            audience: _configuration["JWT:ValidAudience"],
+            issuer: _config.JwtConfig.ValidIssuer,
+            audience: _config.JwtConfig.ValidAudience,
             expires: DateTime.Now.AddDays(7),
             claims: claims,
             signingCredentials: new SigningCredentials(

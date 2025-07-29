@@ -13,26 +13,28 @@ public class JwtMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly Config _config;
-    private TodoDbContext _context;
 
-    public JwtMiddleware(RequestDelegate next, IOptions<Config> config, TodoDbContext context)
+    public JwtMiddleware(RequestDelegate next, IOptions<Config> config)
     {
         _next = next;
         _config = config.Value;
-        _context = context;
     }
 
-    public async Task Invoke(HttpContext context)
+    public async Task Invoke(HttpContext context, IServiceProvider serviceProvider)
     {
+        var dbContext = serviceProvider.GetRequiredService<TodoDbContext>();
         var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-
         if (token != null)
-            await AttachUserToContext(context, token);
+            await AttachUserToContext(context, token, dbContext);
 
         await _next(context);
     }
 
-    private async Task AttachUserToContext(HttpContext context, string token)
+    private async Task AttachUserToContext(
+        HttpContext context,
+        string token,
+        TodoDbContext dbContext
+    )
     {
         try
         {
@@ -58,10 +60,12 @@ public class JwtMiddleware
             );
 
             //Attach user to context on successful JWT validation
-            context.Items["User"] = _context.Users.Where((x) => x.Id == userId);
+            User user = dbContext.Users.First((x) => x.Id == userId);
+            context.Items["User"] = user;
         }
-        catch
+        catch (Exception e)
         {
+            Console.WriteLine(e);
             //Do nothing if JWT validation fails
             // user is not attached to context so the request won't have access to secure routes
         }

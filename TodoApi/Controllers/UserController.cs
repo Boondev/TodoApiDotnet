@@ -25,14 +25,14 @@ namespace TodoApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDto>> GetUser(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var findUser = await _context.Users.FindAsync(id);
 
-            if (user == null)
+            if (findUser == null)
             {
                 return NotFound();
             }
 
-            return Ok(_mapper.Map<UserDto>(user));
+            return Ok(_mapper.Map<UserDto>(findUser));
         }
     }
 }

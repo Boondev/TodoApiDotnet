@@ -23,12 +23,8 @@ namespace TodoApi.Models
         [Column("description")]
         public string Description { get; set; }
 
-        [Column("category")]
-        [MaxLength(200)]
-        public string Category { get; set; }
-
         [Column("todo_status")]
-        public TodoStatus Status { get; set; }
+        public TodoStatus Status { get; set; } = TodoStatus.InComplete;
         public virtual User User { get; set; }
     }
 }

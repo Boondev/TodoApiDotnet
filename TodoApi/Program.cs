@@ -7,6 +7,7 @@ using TodoApi.Data;
 using TodoApi.MappingProfiles;
 using TodoApi.Models;
 using TodoApi.Services;
+using TodoApi.Utils.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,7 @@ Services.AddControllers();
 Services.AddEndpointsApiExplorer();
 Services.AddSwaggerGen();
 Services.AddAutoMapper(typeof(UserMappings));
+Services.AddAutoMapper(typeof(TodoMappings));
 Services
     .AddAuthentication(
         (options) =>
@@ -39,14 +41,15 @@ Services
             ValidateIssuer = true,
             ValidateAudience = false,
             // ValidAudience = configuration["JWT:ValidAudience"]
-            ValidIssuer = configuration["JWT:ValidIssuer"],
+            ValidIssuer = configuration["Config:JWTConfig:ValidIssuer"],
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(configuration["JWT:Secret"])
+                Encoding.UTF8.GetBytes(configuration["Config:JWTConfig:Secret"])
             ),
         };
     });
 Services.Configure<Config>(builder.Configuration.GetSection("Config"));
 Services.AddTransient<IAuthService, AuthService>();
+Services.AddTransient<ITodoService, TodoService>();
 
 var conntextionString = builder.Configuration.GetConnectionString("DefaultConnection");
 Services
@@ -61,6 +64,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<JwtMiddleware>();
 
 app.UseHttpsRedirection();
 

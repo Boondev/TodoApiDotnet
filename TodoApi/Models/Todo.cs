@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace TodoApi.Models
 {
     public enum TodoStatus
     {
-        Complete,
         InComplete,
+        Complete,
     }
 
     [Table("todoes")]
@@ -25,6 +26,8 @@ namespace TodoApi.Models
 
         [Column("todo_status")]
         public TodoStatus Status { get; set; } = TodoStatus.InComplete;
+
+        [JsonIgnore]
         public virtual User User { get; set; }
     }
 }

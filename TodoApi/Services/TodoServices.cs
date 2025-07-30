@@ -82,7 +82,9 @@ public class TodoService(TodoDbContext context, IMapper mapper) : ITodoService
         var findTodo =
             _context.Todoes.First(x => x.Id == todo.Id && x.User.Id == userId)
             ?? throw new Exception("todo not found");
-        _context.Todoes.Update(todo);
+        findTodo.Title = todo.Title;
+        findTodo.Description = todo.Description;
+        findTodo.Status = todo.Status;
         if (_context.SaveChanges() < 0)
             throw new Exception(errorMessage);
     }

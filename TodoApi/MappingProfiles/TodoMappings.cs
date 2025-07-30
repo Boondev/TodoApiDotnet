@@ -12,6 +12,7 @@ namespace TodoApi.MappingProfiles
         {
             CreateMap<Todo, CreateTodoDto>().ReverseMap();
             CreateMap<Todo, UpdateTodoDto>().ReverseMap();
+            CreateMap<Todo, Todo>();
         }
     }
 }

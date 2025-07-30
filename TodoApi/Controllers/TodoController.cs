@@ -10,25 +10,23 @@ namespace TodoApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class TodoController(TodoDbContext context, IMapper mapper, ITodoService todoService)
-        : Controller
+    public class TodoController(ITodoService todoService) : Controller
     {
-        private readonly TodoDbContext _context = context;
-        private readonly IMapper _mapper = mapper;
         private readonly ITodoService _todoService = todoService;
 
         [Authorize]
-        [HttpPost("/get")]
+        [HttpPost("get")]
         public IActionResult GetTodoList([FromBody] GetTodoDto getTodoDto)
         {
+            Console.WriteLine("halo");
             var user = HttpContext.Items["User"] as User ?? throw new UnauthorizedAccessException();
             var list = _todoService.GetTodoList(user, getTodoDto);
-
+            Console.WriteLine(list);
             return Ok(list);
         }
 
         [Authorize]
-        [HttpPost("/create")]
+        [HttpPost("create")]
         public IActionResult CreateTodo([FromBody] CreateTodoDto dto)
         {
             var user = HttpContext.Items["User"] as User ?? throw new UnauthorizedAccessException();
@@ -37,7 +35,7 @@ namespace TodoApi.Controllers
         }
 
         [Authorize]
-        [HttpPost("/edit")]
+        [HttpPatch("edit")]
         public IActionResult EditTodo([FromBody] UpdateTodoDto dto)
         {
             var user = HttpContext.Items["User"] as User ?? throw new UnauthorizedAccessException();
@@ -46,7 +44,7 @@ namespace TodoApi.Controllers
         }
 
         [Authorize]
-        [HttpPost("/{id}/mark")]
+        [HttpPatch("{id}/mark")]
         public IActionResult MarkTodo(int id)
         {
             var user = HttpContext.Items["User"] as User ?? throw new UnauthorizedAccessException();
@@ -55,7 +53,7 @@ namespace TodoApi.Controllers
         }
 
         [Authorize]
-        [HttpPost("/{id}/unmark")]
+        [HttpPatch("{id}/unmark")]
         public IActionResult UnMarkTodo(int id)
         {
             var user = HttpContext.Items["User"] as User ?? throw new UnauthorizedAccessException();
@@ -64,7 +62,7 @@ namespace TodoApi.Controllers
         }
 
         [Authorize]
-        [HttpPost("/{id}/delete")]
+        [HttpPatch("{id}/delete")]
         public IActionResult DeleteTodo(int id)
         {
             var user = HttpContext.Items["User"] as User ?? throw new UnauthorizedAccessException();
